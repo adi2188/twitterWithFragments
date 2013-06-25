@@ -34,26 +34,31 @@ public class TwitterClient extends OAuthBaseClient {
     }
     
     public void getHomeTimeline(AsyncHttpResponseHandler handler) {
-    	String url = getApiUrl("statuses/home_timeline.json");
-    	client.get(url, null, handler);
-    }
-    
-    // CHANGE THIS
-    // DEFINE METHODS for different API endpoints here
-    public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-        // Can specify query string params directly or through RequestParams.
-        RequestParams params = new RequestParams();
-        params.put("format", "json");
-        client.get(apiUrl, params, handler);
-    }
-    
-    /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-     * 	  i.e getApiUrl("statuses/home_timeline.json");
-     * 2. Define the parameters to pass to the request (query or body)
-     *    i.e RequestParams params = new RequestParams("foo", "bar");
-     * 3. Define the request method and make a call to the client
-     *    i.e client.get(apiUrl, params, handler);
-     *    i.e client.post(apiUrl, params, handler);
-     */
+        String url = getApiUrl("statuses/home_timeline.json");
+        client.get(url, null, handler);
+       }
+       
+       public void getMentions(AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("statuses/mentions_timeline.json");
+        client.get(url, null, handler);
+       }
+       
+	public void getUserTimeline(AsyncHttpResponseHandler handler,
+			String screen_name) {
+		String url;
+		if (screen_name == null || screen_name.isEmpty()) {
+			url = getApiUrl("statuses/user_timeline.json");
+		} else {
+			url = getApiUrl("statuses/user_timeline.json?screen_name="
+					+ screen_name);
+		}
+		client.get(url, null, handler);
+	}
+       
+       public void getMyInfo(AsyncHttpResponseHandler handler) {
+           String apiUrl = getApiUrl("account/verify_credentials.json");
+           client.get(apiUrl, null, handler);
+       }
+       
+       
 }

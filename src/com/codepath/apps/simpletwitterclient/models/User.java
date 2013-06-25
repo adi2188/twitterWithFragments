@@ -1,8 +1,10 @@
 package com.codepath.apps.simpletwitterclient.models;
 
+import java.io.Serializable;
+
 import org.json.JSONObject;
 
-public class User extends BaseModel {
+public class User extends BaseModel implements Serializable{
     public String getName() {
         return getString("name");
     }
@@ -34,6 +36,10 @@ public class User extends BaseModel {
     public int getFriendsCount() {
         return getInt("friends_count");
     }
+    
+    public String getTagline() {
+        return getString("description");
+       }
 
     public static User fromJson(JSONObject json) {
         User u = new User();
