@@ -25,17 +25,17 @@ public class ProfileActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_profile);
 		User u = (User) getIntent().getSerializableExtra("user");
-		if (u == null) {
 		client = SimpleTwitterApp.getRestClient();
-		client.getMyInfo(new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONObject json) {
-				user = User.fromJson(json);
-				getActionBar().setTitle("@" + user.getScreenName());
-				populateProfileHeader(user);
-			}
-		});
-		populateProfileTweets(null);
+		if (u == null) {
+			client.getMyInfo(new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(JSONObject json) {
+					user = User.fromJson(json);
+					getActionBar().setTitle("@" + user.getScreenName());
+					populateProfileHeader(user);
+					populateProfileTweets(user);
+				}
+			});
 		} else {
 			Log.d("DEBUG", u.getScreenName());
 			getActionBar().setTitle("@" + u.getScreenName());
@@ -50,19 +50,16 @@ public class ProfileActivity extends FragmentActivity {
 		TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 		TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
 		ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
-		tvName.setText(user.getName());
-		tvTagline.setText(user.getTagline());
-		tvFollowers.setText(user.getFollowersCount() + " Followers");
-		tvFollowing.setText(user.getFriendsCount() + " Following");
-		ImageLoader.getInstance().displayImage(user.getProfileImageUrl(),
+		tvName.setText(u.getName());
+		tvTagline.setText(u.getTagline());
+		tvFollowers.setText(u.getFollowersCount() + " Followers");
+		tvFollowing.setText(u.getFriendsCount() + " Following");
+		ImageLoader.getInstance().displayImage(u.getProfileImageUrl(),
 				ivProfileImage);
 	}
 
 	private void populateProfileTweets(User u) {
-		String user_screen_name = null;
-		if(user != null) {
-			user_screen_name = u.getScreenName();
-		}
+		
 		fragmentTweetsList = (TweetsListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragment_tweets_list);
 
@@ -71,7 +68,7 @@ public class ProfileActivity extends FragmentActivity {
 			public void onSuccess(JSONArray jsonTweets) {
 				fragmentTweetsList.setTweets(Tweet.fromJson(jsonTweets));
 			}
-		}, user_screen_name);
+		}, u.getScreenName());
 	}
 
 	@Override

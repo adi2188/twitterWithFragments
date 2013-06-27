@@ -5,7 +5,13 @@ import java.io.Serializable;
 import org.json.JSONObject;
 
 public class User extends BaseModel implements Serializable{
-    public String getName() {
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3248195833653435147L;
+
+	public String getName() {
         return getString("name");
     }
 
@@ -44,11 +50,7 @@ public class User extends BaseModel implements Serializable{
     public static User fromJson(JSONObject json) {
         User u = new User();
 
-        try {
-            u.jsonObject = json;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        u.rawJSONObject = json.toString();
 
         return u;
     }
